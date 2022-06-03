@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <boost/polygon/polygon.hpp>
+#include "boost/polygon/polygon.hpp"
 
 namespace cam {
     using Point = boost::polygon::point_data<int>;

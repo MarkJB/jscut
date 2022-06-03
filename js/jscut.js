@@ -445,185 +445,185 @@ $(document).on('change', '#choose-settings-file', function (event) {
     $(event.target).replaceWith(control = $(event.target).clone(true));
 });
 
-var googleDeveloperKey = 'AIzaSyABOorNywzgSXQ8Waffle8zAhfgkHUBw0M';
-var googleClientId = '103921723157-leb9b5b4i79euhnn96nlpeeev1m3pvg0.apps.googleusercontent.com';
-var googleAuthApiLoaded = false;
-var googlePickerApiLoaded = false;
-var googleDriveApiLoaded = false;
+// var googleDeveloperKey = '';
+// var googleClientId = '';
+// var googleAuthApiLoaded = false;
+// var googlePickerApiLoaded = false;
+// var googleDriveApiLoaded = false;
 
-function onGoogleApiLoad() {
-    gapi.load('auth', function () { googleAuthApiLoaded = true; });
-    gapi.load('picker', function () { googlePickerApiLoaded = true; });
-}
+// function onGoogleApiLoad() {
+//     gapi.load('auth', function () { googleAuthApiLoaded = true; });
+//     gapi.load('picker', function () { googlePickerApiLoaded = true; });
+// }
 
-function onGoogleClientLoad() {
-    gapi.client.load('drive', 'v2', function () { googleDriveApiLoaded = true; });
-}
+// function onGoogleClientLoad() {
+//     gapi.client.load('drive', 'v2', function () { googleDriveApiLoaded = true; });
+// }
 
-var googleDriveReadToken;
-function googleDriveAuthRead(callback) {
-    if (!googleAuthApiLoaded)
-        return;
-    else if (googleDriveReadToken)
-        callback();
-    else
-        window.gapi.auth.authorize({
-            'client_id': googleClientId,
-            'scope': ['https://www.googleapis.com/auth/drive.readonly'],
-            'immediate': false
-        }, function (authResult) {
-            if (authResult && !authResult.error) {
-                googleDriveReadToken = authResult.access_token;
-                callback();
-            }
-        });
-}
+// var googleDriveReadToken;
+// function googleDriveAuthRead(callback) {
+//     if (!googleAuthApiLoaded)
+//         return;
+//     else if (googleDriveReadToken)
+//         callback();
+//     else
+//         window.gapi.auth.authorize({
+//             'client_id': googleClientId,
+//             'scope': ['https://www.googleapis.com/auth/drive.readonly'],
+//             'immediate': false
+//         }, function (authResult) {
+//             if (authResult && !authResult.error) {
+//                 googleDriveReadToken = authResult.access_token;
+//                 callback();
+//             }
+//         });
+// }
 
-var googleDriveWriteToken;
-function googleDriveAuthWrite(callback) {
-    if (!googleAuthApiLoaded)
-        return;
-    else if (googleDriveWriteToken)
-        callback();
-    else
-        window.gapi.auth.authorize({
-            'client_id': googleClientId,
-            'scope': ['https://www.googleapis.com/auth/drive'],
-            'immediate': false
-        }, function (authResult) {
-            if (authResult && !authResult.error) {
-                googleDriveWriteToken = authResult.access_token;
-                callback();
-            }
-        });
-}
+// var googleDriveWriteToken;
+// function googleDriveAuthWrite(callback) {
+//     if (!googleAuthApiLoaded)
+//         return;
+//     else if (googleDriveWriteToken)
+//         callback();
+//     else
+//         window.gapi.auth.authorize({
+//             'client_id': googleClientId,
+//             'scope': ['https://www.googleapis.com/auth/drive'],
+//             'immediate': false
+//         }, function (authResult) {
+//             if (authResult && !authResult.error) {
+//                 googleDriveWriteToken = authResult.access_token;
+//                 callback();
+//             }
+//         });
+// }
 
-function openGoogle(picker, wildcard, callback) {
-    googleDriveAuthRead(function () {
-        if (googlePickerApiLoaded && googleDriveApiLoaded) {
-            if (!picker.picker) {
-                picker.picker = new google.picker.PickerBuilder();
-                picker.picker.addView(
-                    new google.picker.DocsView(google.picker.ViewId.DOCS).
-                        setQuery(wildcard));
-                picker.picker.enableFeature(google.picker.Feature.NAV_HIDDEN);
-                picker.picker.setOAuthToken(googleDriveReadToken);
-                picker.picker.setDeveloperKey(googleDeveloperKey);
-                picker.picker.setCallback(function (data) {
-                    if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-                        var doc = data[google.picker.Response.DOCUMENTS][0];
-                        var name = doc[google.picker.Document.NAME];
-                        var id = doc[google.picker.Document.ID];
+// function openGoogle(picker, wildcard, callback) {
+//     googleDriveAuthRead(function () {
+//         if (googlePickerApiLoaded && googleDriveApiLoaded) {
+//             if (!picker.picker) {
+//                 picker.picker = new google.picker.PickerBuilder();
+//                 picker.picker.addView(
+//                     new google.picker.DocsView(google.picker.ViewId.DOCS).
+//                         setQuery(wildcard));
+//                 picker.picker.enableFeature(google.picker.Feature.NAV_HIDDEN);
+//                 picker.picker.setOAuthToken(googleDriveReadToken);
+//                 picker.picker.setDeveloperKey(googleDeveloperKey);
+//                 picker.picker.setCallback(function (data) {
+//                     if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+//                         var doc = data[google.picker.Response.DOCUMENTS][0];
+//                         var name = doc[google.picker.Document.NAME];
+//                         var id = doc[google.picker.Document.ID];
 
-                        var alert = showAlert("loading " + name, "alert-info", false);
-                        gapi.client.drive.files.get({
-                            'fileId': id
-                        }).execute(function (resp) {
-                            if (resp.error) {
-                                alert.remove();
-                                showAlert(resp.error.message, "alert-danger");
-                            } else {
-                                var xhr = new XMLHttpRequest();
-                                xhr.open('GET', resp.downloadUrl);
-                                xhr.setRequestHeader('Authorization', 'Bearer ' + googleDriveReadToken);
-                                xhr.onload = function (content) {
-                                    if (this.status == 200)
-                                        callback(alert, name, this.responseText);
-                                    else {
-                                        alert.remove();
-                                        showAlert(this.statusText, "alert-danger");
-                                    }
-                                };
-                                xhr.onerror = function () {
-                                    alert.remove();
-                                    showAlert("load " + name + " failed", "alert-danger");
-                                };
-                                xhr.overrideMimeType('text');
-                                xhr.send();
-                            }
-                        });
-                    }
-                });
-                picker.picker = picker.picker.build();
-            }
-            picker.picker.setVisible(true);
-        }
-    });
-} // openGoogle()
+//                         var alert = showAlert("loading " + name, "alert-info", false);
+//                         gapi.client.drive.files.get({
+//                             'fileId': id
+//                         }).execute(function (resp) {
+//                             if (resp.error) {
+//                                 alert.remove();
+//                                 showAlert(resp.error.message, "alert-danger");
+//                             } else {
+//                                 var xhr = new XMLHttpRequest();
+//                                 xhr.open('GET', resp.downloadUrl);
+//                                 xhr.setRequestHeader('Authorization', 'Bearer ' + googleDriveReadToken);
+//                                 xhr.onload = function (content) {
+//                                     if (this.status == 200)
+//                                         callback(alert, name, this.responseText);
+//                                     else {
+//                                         alert.remove();
+//                                         showAlert(this.statusText, "alert-danger");
+//                                     }
+//                                 };
+//                                 xhr.onerror = function () {
+//                                     alert.remove();
+//                                     showAlert("load " + name + " failed", "alert-danger");
+//                                 };
+//                                 xhr.overrideMimeType('text');
+//                                 xhr.send();
+//                             }
+//                         });
+//                     }
+//                 });
+//                 picker.picker = picker.picker.build();
+//             }
+//             picker.picker.setVisible(true);
+//         }
+//     });
+// } // openGoogle()
 
-function saveGoogle(filename, content, callback) {
-    googleDriveAuthWrite(function () {
-        if (googlePickerApiLoaded && googleDriveApiLoaded && googleDriveWriteToken) {
-            const boundary = '-------53987238478475486734879872344353478123';
-            const delimiter = "\r\n--" + boundary + "\r\n";
-            const close_delim = "\r\n--" + boundary + "--";
+// function saveGoogle(filename, content, callback) {
+//     googleDriveAuthWrite(function () {
+//         if (googlePickerApiLoaded && googleDriveApiLoaded && googleDriveWriteToken) {
+//             const boundary = '-------53987238478475486734879872344353478123';
+//             const delimiter = "\r\n--" + boundary + "\r\n";
+//             const close_delim = "\r\n--" + boundary + "--";
 
-            var contentType = 'text/plain';
-            var metadata = {
-                'title': filename,
-                'mimeType': contentType
-            };
+//             var contentType = 'text/plain';
+//             var metadata = {
+//                 'title': filename,
+//                 'mimeType': contentType
+//             };
 
-            var multipartRequestBody =
-                delimiter +
-                'Content-Type: application/json\r\n\r\n' +
-                JSON.stringify(metadata) +
-                delimiter +
-                'Content-Type: ' + contentType + '\r\n' +
-                '\r\n' +
-                content +
-                close_delim;
+//             var multipartRequestBody =
+//                 delimiter +
+//                 'Content-Type: application/json\r\n\r\n' +
+//                 JSON.stringify(metadata) +
+//                 delimiter +
+//                 'Content-Type: ' + contentType + '\r\n' +
+//                 '\r\n' +
+//                 content +
+//                 close_delim;
 
-            var request = gapi.client.request({
-                'path': '/upload/drive/v2/files',
-                'method': 'POST',
-                'params': { 'uploadType': 'multipart' },
-                'headers': {
-                    'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
-                },
-                'body': multipartRequestBody
-            });
+//             var request = gapi.client.request({
+//                 'path': '/upload/drive/v2/files',
+//                 'method': 'POST',
+//                 'params': { 'uploadType': 'multipart' },
+//                 'headers': {
+//                     'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+//                 },
+//                 'body': multipartRequestBody
+//             });
 
-            var alert = showAlert("saving " + filename, "alert-info", false);
-            request.execute(function (result) {
-                if (result.error) {
-                    alert.remove();
-                    showAlert(result.error.message, "alert-danger");
-                } else {
-                    alert.remove();
-                    showAlert("saved " + filename, "alert-success");
-                    callback();
-                }
-            });
-        }
-    });
-} // saveGoogle()
+//             var alert = showAlert("saving " + filename, "alert-info", false);
+//             request.execute(function (result) {
+//                 if (result.error) {
+//                     alert.remove();
+//                     showAlert(result.error.message, "alert-danger");
+//                 } else {
+//                     alert.remove();
+//                     showAlert("saved " + filename, "alert-success");
+//                     callback();
+//                 }
+//             });
+//         }
+//     });
+// } // saveGoogle()
 
-var googleOpenSvgPicker = {};
-function openSvgGoogle() {
-    openGoogle(googleOpenSvgPicker, '*.svg', loadSvg);
-}
+// var googleOpenSvgPicker = {};
+// function openSvgGoogle() {
+//     openGoogle(googleOpenSvgPicker, '*.svg', loadSvg);
+// }
 
-function saveGcodeGoogle(callback) {
-    if (gcodeConversionViewModel.gcode() == "") {
-        showAlert('Click "Generate Gcode" first', "alert-danger");
-        return;
-    }
-    saveGoogle(gcodeConversionViewModel.gcodeFilename(), gcodeConversionViewModel.gcode(), callback);
-}
+// function saveGcodeGoogle(callback) {
+//     if (gcodeConversionViewModel.gcode() == "") {
+//         showAlert('Click "Generate Gcode" first', "alert-danger");
+//         return;
+//     }
+//     saveGoogle(gcodeConversionViewModel.gcodeFilename(), gcodeConversionViewModel.gcode(), callback);
+// }
 
-var googleOpenSettingsPicker = {};
-function loadSettingsGoogle() {
-    openGoogle(googleOpenSettingsPicker, '*.jscut', function (alert, filename, content) {
-        fromJson(JSON.parse(content));
-        alert.remove();
-        showAlert("loaded " +filename, "alert-success");
-});
-}
+// var googleOpenSettingsPicker = {};
+// function loadSettingsGoogle() {
+//     openGoogle(googleOpenSettingsPicker, '*.jscut', function (alert, filename, content) {
+//         fromJson(JSON.parse(content));
+//         alert.remove();
+//         showAlert("loaded " +filename, "alert-success");
+// });
+// }
 
-function saveSettingsGoogle(callback) {
-    saveGoogle(miscViewModel.saveSettingsFilename(), JSON.stringify(toJson()), callback);
-}
+// function saveSettingsGoogle(callback) {
+//     saveGoogle(miscViewModel.saveSettingsFilename(), JSON.stringify(toJson()), callback);
+// }
 
 /* Support for storing settings in the browser local storage
  */

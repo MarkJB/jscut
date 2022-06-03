@@ -16,16 +16,17 @@
 // along with jscut.  If not, see <http://www.gnu.org/licenses/>.
 
 function ToolModel() {
+    // These are the 'hard coded' defaults.
     var self = this;
-    self.units = ko.observable("inch");
+    self.units = ko.observable("mm");
     self.unitConverter = new UnitConverter(self.units);
-    self.diameter = ko.observable(.125);
+    self.diameter = ko.observable(.5);
     self.angle = ko.observable(180);
-    self.passDepth = ko.observable(.125);
-    self.stepover = ko.observable(.4);
-    self.rapidRate = ko.observable(100);
-    self.plungeRate = ko.observable(5);
-    self.cutRate = ko.observable(40);
+    self.passDepth = ko.observable(.5);
+    self.stepover = ko.observable(1);
+    self.rapidRate = ko.observable(1000);
+    self.plungeRate = ko.observable(1);
+    self.cutRate = ko.observable(400);
 
     self.unitConverter.add(self.diameter);
     self.unitConverter.add(self.passDepth);

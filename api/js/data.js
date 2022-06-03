@@ -52,7 +52,7 @@ jscut.data = jscut.data || {};
 
         var result = {
             units: "inch",
-            thickness: "1.0",
+            thickness: "2",
             zOrigin: "Top",
             clearance: "0.1",
         }
@@ -85,13 +85,13 @@ jscut.data = jscut.data || {};
             json = JSON.parse(json);
 
         var result = {
-            units: 'inch',
-            diameter: .125,
-            passDepth: .125,
-            stepover: .4,
-            rapidRate: 100,
-            plungeRate: 5,
-            cutRate: 40,
+            units: 'mm',
+            diameter: .5,
+            passDepth: .5,
+            stepover: 1,
+            rapidRate: 1000,
+            plungeRate: 50,
+            cutRate: 500,
         }
 
         function fetch(name) {
@@ -138,7 +138,7 @@ jscut.data = jscut.data || {};
             combineOp: "Union",
             camOp: "Pocket",
             direction: "Conventional",
-            cutDepth: .125,
+            cutDepth: .019685,
             margin: 0,
             width: 0,
             geometries: [],

@@ -30,7 +30,7 @@ COMPILE_FLAGS =                                     \
     hspocket.cpp                                    \
     separateTabs.cpp                                \
     vEngrave.cpp                                    \
-    -I ../../boost_1_56_0                           \
+    -I D:/OneDrive/Code/boost_1_79_0/boost_1_79_0                 \
     -std=c++11                                      \
     --memory-init-file 0                            \
     -fcolor-diagnostics                             \
@@ -44,7 +44,6 @@ COMPILE_FLAGS =                                     \
     -s ALLOW_MEMORY_GROWTH=1                        \
     -s SAFE_HEAP=0                                  \
     -s DISABLE_EXCEPTION_CATCHING=1                 \
-    -s FORCE_ALIGNED_MEMORY=1                       \
     -s NO_EXIT_RUNTIME=1                            \
     -s EXPORTED_FUNCTIONS="['_hspocket', '_separateTabs', '_vPocket']" \
     -o ../js/cam-cpp.js                             \

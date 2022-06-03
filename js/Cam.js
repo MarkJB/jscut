@@ -371,8 +371,12 @@ jscut.priv.cam = jscut.priv.cam || {};
         var gcode = "";
 
         var retractGcode =
-            '; Retract\r\n' +
-            'G1 Z' + safeZ.toFixed(decimal) + rapidFeedGcode + '\r\n';
+            '; Pen up\r\n' +
+            'M3 S0\r\n';
+
+        // var retractGcode =
+        //     '; Retract\r\n' +
+        //     'G1 Z' + safeZ.toFixed(decimal) + rapidFeedGcode + '\r\n';
 
         var retractForTabGcode =
             '; Retract for tab\r\n' +
@@ -470,15 +474,16 @@ jscut.priv.cam = jscut.priv.cam || {};
                             }
                             if (!executedRamp)
                                 gcode +=
-                                    '; plunge\r\n' +
-                                    'G1 Z' + selectedZ.toFixed(decimal) + plungeFeedGcode + '\r\n';
+                                    '; Pen down\r\n' +
+                                    // 'G1 Z' + selectedZ.toFixed(decimal) + plungeFeedGcode + '\r\n';
+                                    'M3 S1\r\n';
                         } else if (selectedZ > currentZ) {
                             gcode += retractForTabGcode;
                         }
                         currentZ = selectedZ;
                     } // !useZ
 
-                    gcode += '; cut\r\n';
+                    gcode += '; Draw\r\n';
 
                     for (var i = 1; i < selectedPath.length; ++i) {
                         gcode += 'G1' + convertPoint(selectedPath[i], useZ);

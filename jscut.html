@@ -31,7 +31,7 @@ along with jscut.  If not, see <http://www.gnu.org/licenses/>.
     <link href="lib/bootstrap-slider.min.css" rel="stylesheet">
     <link href="jscut.css" rel="stylesheet">
 </head>
-<body>
+<body onload="makeAllSameUnit('mm')">
     <!-- Save Settings Modal -->
     <div class="modal fade" id="save-settings-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -279,7 +279,7 @@ along with jscut.  If not, see <http://www.gnu.org/licenses/>.
                                                     </select>
                                             <tr>
                                                 <td><label class="control-label">Units</label>
-                                                <td><select data-bind="value: units"><option>inch<option>mm</select>
+                                                <td><select data-bind="value: units"><option>mm<option>inch</select>
                                             <tr data-bind="visible: camOp()!='Engrave'">
                                                 <td><label class="control-label">Margin</label>
                                                 <td><input id="opMargin" type="number" step="any" data-bind="value: margin">
@@ -295,7 +295,7 @@ along with jscut.  If not, see <http://www.gnu.org/licenses/>.
                     </div>
                 </div>
                 <!-- tabs -->
-                <div class="panel panel-default" id="Tabs">
+                <div class="panel panel-default" id="Tabs" hidden=true>
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTabs">Tabs</a>
@@ -336,7 +336,7 @@ along with jscut.  If not, see <http://www.gnu.org/licenses/>.
                 <div class="panel panel-default" id="Tool">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTool">Tool (shared for all operations)</a>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTool">Pen settings</a>
                         </h3>
                     </div>
                     <div id="collapseTool" class="panel-collapse collapse in">
@@ -346,31 +346,31 @@ along with jscut.  If not, see <http://www.gnu.org/licenses/>.
                                     <td><label for="toolUnits" class="control-label">Units</label>
                                     <td><select id="toolUnits" data-bind="value: units"><option>inch<option>mm</select>
                                 <tr>
-                                    <td><label for="toolDiameter" class="control-label">Diameter</label>
+                                    <td><label for="toolDiameter" class="control-label">Pen Nib Diameter</label>
                                     <td><span data-bind="text: units"></span>
                                     <td><input id="toolDiameter" type="number" step="any" data-bind="value: diameter">
-                                <tr>
+                                <!-- <tr>
                                     <td><label for="toolAngle" class="control-label">Angle</label>
                                     <td>degrees
-                                    <td><input id="toolAngle" type="number" step="any" data-bind="value: angle">
-                                <tr>
+                                    <td><input id="toolAngle" type="number" step="any" data-bind="value: angle"> -->
+                                <!-- <tr>
                                     <td><label for="toolPassDepth" class="control-label">Pass Depth</label>
                                     <td><span data-bind="text: units"></span>
-                                    <td><input id="toolPassDepth" type="number" step="any" data-bind="value: passDepth">
-                                <tr>
+                                    <td><input id="toolPassDepth" type="number" step="any" data-bind="value: passDepth"> -->
+                                <!-- <tr>
                                     <td><label for="toolStepOver" class="control-label">Step Over</label>
                                     <td>(0, 1]
-                                    <td><input id="toolStepOver" type="number" step="any" data-bind="value: stepover">
+                                    <td><input id="toolStepOver" type="number" step="any" data-bind="value: stepover"> -->
                                 <tr>
-                                    <td><label for="toolRapidRate" class="control-label">Rapid</label>
+                                    <td><label for="toolRapidRate" class="control-label">Move Speed</label>
                                     <td><span data-bind="text: units"></span>/min
                                     <td><input id="toolRapidRate" type="number" step="any" data-bind="value: rapidRate">
-                                <tr>
+                                <!-- <tr>
                                     <td><label for="toolPlungeRate" class="control-label">Plunge</label>
                                     <td><span data-bind="text: units"></span>/min
-                                    <td><input id="toolPlungeRate" type="number" step="any" data-bind="value: plungeRate">
+                                    <td><input id="toolPlungeRate" type="number" step="any" data-bind="value: plungeRate"> -->
                                 <tr>
-                                    <td><label for="toolCutRate" class="control-label">Cut</label>
+                                    <td><label for="toolCutRate" class="control-label">Draw Speed</label>
                                     <td><span data-bind="text: units"></span>/min
                                     <td><input id="toolCutRate" type="number" step="any" data-bind="value: cutRate">
                             </table>
