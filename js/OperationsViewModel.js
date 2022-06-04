@@ -116,6 +116,7 @@ function Operation(miscViewModel, options, svgViewModel, materialViewModel, oper
     self.toolPaths = ko.observable([]);
     self.toolPathSvg = null;
 
+    self.svgScaleFactor = SvgViewModel.scaleFactor;
 
     self.unitConverter.add(self.cutDepth);
     self.unitConverter.add(self.margin);
