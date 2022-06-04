@@ -116,6 +116,7 @@ function Operation(miscViewModel, options, svgViewModel, materialViewModel, oper
     self.toolPaths = ko.observable([]);
     self.toolPathSvg = null;
 
+
     self.unitConverter.add(self.cutDepth);
     self.unitConverter.add(self.margin);
     self.unitConverter.add(self.width);
@@ -254,8 +255,14 @@ function Operation(miscViewModel, options, svgViewModel, materialViewModel, oper
         var offset = self.margin.toInch() * jscut.priv.path.inchToClipperScale;
         if (self.camOp() == "Pocket" || self.camOp() == "V Pocket" || self.camOp() == "Inside")
             offset = -offset;
+
+
+        // How can we apply a scale to the engrave?
         if (self.camOp() != "Engrave" && offset != 0)
             geometry = jscut.priv.path.offset(geometry, offset);
+
+
+
 
         if (self.camOp() == "Pocket")
             self.toolPaths(jscut.priv.cam.pocket(geometry, toolCamArgs.diameterClipper, 1 - toolCamArgs.stepover, self.direction() == "Climb"));
@@ -267,10 +274,25 @@ function Operation(miscViewModel, options, svgViewModel, materialViewModel, oper
                 width = toolCamArgs.diameterClipper;
             self.toolPaths(jscut.priv.cam.outline(geometry, toolCamArgs.diameterClipper, self.camOp() == "Inside", width, 1 - toolCamArgs.stepover, self.direction() == "Climb"));
         }
+
+        // Maybe its done here? 
         else if (self.camOp() == "Engrave")
             self.toolPaths(jscut.priv.cam.engrave(geometry, self.direction() == "Climb"));
 
         var path = jscut.priv.path.getSnapPathFromClipperPaths(jscut.priv.cam.getClipperPathsFromCamPaths(self.toolPaths()), svgViewModel.pxPerInch());
+        var clipperPath = jscut.priv.cam.getClipperPathsFromCamPaths(self.toolPaths());
+
+        // If we have a scaleFactor that is not 100% apply the scale factor.
+        // var scaleFactor = 100;
+        // SvgViewModel.scaleFactor.subscribe(function(newScaleFactor){scaleFactor=newScaleFactor});
+        if (self.svgScaleFactor!==100){ 
+            console.log("Scaling svg by ", self.svgScaleFactor, "%");
+            console.log(clipperPath[0]);
+            ClipperLib.JS.ScaleUpPaths(clipperPath, self.svgScaleFactor/100);
+            console.log(clipperPath[0]);
+        }
+
+
         if (path != null && path.length > 0)
             self.toolPathSvg = toolPathsGroup.path(path).attr("class", "toolPath");
 

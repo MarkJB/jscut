@@ -306,17 +306,18 @@ function popoverHover(obj, placement, content) {
     });
 }
 
-popoverHover('#pxPerInch', "bottom", "SVG editors use different scales from each other; set this to allow sizes come out correctly.<br><br><table><tr><td>Inkscape 0.9x:<td>96<tr><td>Inkscape 0.4x:<td>90<tr><td>Adobe Illustrator:<td>72<tr><td>CorelDRAW:<td>96</table>");
+popoverHover('#pxPerInch', "bottom", "SVG editors use different scales. Set this to match your editor.<br><br><table><tr><td>Inkscape 0.9x:<td>96<tr><td>Inkscape 0.4x:<td>90<tr><td>Adobe Illustrator:<td>72<tr><td>CorelDRAW:<td>96</table>");
+popoverHover('#scaleFactor', "bottom", "Scale your SVG by this amount. 100% = Size defined by the SVG. Check the resulting size in the Gcode panel after creating the operation and generating the gcode.");
 
 popoverHover('#tabsMaxCutDepth', "right", "Maximum depth operations may cut when they pass over tabs");
 
-popoverHover('#toolDiameter', "right", "Diameter of tool. V Pocket ignores this. Simulate GCODE also ignores Diameter if Angle < 180.");
+popoverHover('#toolDiameter', "right", "Diameter of pen nib. V Pocket ignores this.");
 popoverHover('#toolAngle', "right", "Angle of V cutter. 180 for normal (flat bottom) tools. V Pocket is the only operation which obeys this. Simulate GCODE always obeys it.");
 popoverHover('#toolPassDepth', "right", "Maximum depth the tool should plunge each pass. Use a smaller pass depth for harder materials and better quality.");
 popoverHover('#toolStepOver', "right", "What fraction of the tool diameter the tool should step over each time around a loop. Smaller values produce better cuts and reduce tool wear, but take longer to complete.");
-popoverHover('#toolRapidRate', "right", "The speed the tool moves while not cutting");
+popoverHover('#toolRapidRate', "right", "The speed the pens moves while not drawing.");
 popoverHover('#toolPlungeRate', "right", "The speed the tool plunges downwards into the material");
-popoverHover('#toolCutRate', "right", "The speed the tool moves horizontally during cutting");
+popoverHover('#toolCutRate', "right", "The speed the pen moves while drawing.");
 
 popoverHover('#inputMatThickness', "top", "How thick is the material");
 popoverHover('#selectMatZOrigin', "top", "What is considered the 0 Z position");

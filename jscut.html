@@ -213,6 +213,9 @@ along with jscut.  If not, see <http://www.gnu.org/licenses/>.
                                 <tr>
                                     <td><label for="pxPerInch">px per inch</label>
                                     <td><input type="number" step="any" id="pxPerInch" data-bind="value: svgViewModel.pxPerInch">
+                                <tr>
+                                    <td><label for="pxPerInch">Scale factor %</label>
+                                    <td><input type="number" step="any" id="scaleFactor" data-bind="value: svgViewModel.scaleFactor">
                             </table>
                             <div style="display: inline-block">
                                 <button id="createOperationButton" class="btn btn-default" data-bind="click: addOperation, enable:selectionViewModel.selNumSelected()>0">Create Operation</button>

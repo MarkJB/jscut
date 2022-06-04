@@ -19,6 +19,7 @@ function SvgViewModel() {
     "use strict";
     var self = this;
     self.pxPerInch = ko.observable("96");
+    self.scaleFactor = ko.observable("100");
 
     self.toJson = function () {
         return {
