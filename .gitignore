@@ -1,3 +1,4 @@
 jscut_standalone
 xxx*
 node_modules
+*.log
