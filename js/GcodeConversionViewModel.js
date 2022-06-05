@@ -31,31 +31,38 @@ function GcodeConversionViewModel(options, miscViewModel, materialViewModel, too
     self.unitConverter.add(self.offsetX);
     self.unitConverter.add(self.offsetY);
 
+    //Include svgViewModel.scaleFactor() in gcode operations.
     self.minX = ko.computed(function () {
-        return (self.unitConverter.fromInch(operationsViewModel.minX() / jscut.priv.path.inchToClipperScale) + Number(self.offsetX())).toFixed(4);
+        return (self.unitConverter.fromInch(operationsViewModel.minX() / jscut.priv.path.inchToClipperScale) * (svgViewModel.scaleFactor()/100) + Number(self.offsetX())).toFixed(4);
     });
     self.maxX = ko.computed(function () {
-        return (self.unitConverter.fromInch(operationsViewModel.maxX() / jscut.priv.path.inchToClipperScale) + Number(self.offsetX())).toFixed(4);
+        return (self.unitConverter.fromInch(operationsViewModel.maxX() / jscut.priv.path.inchToClipperScale) * (svgViewModel.scaleFactor()/100) + Number(self.offsetX())).toFixed(4);
     });
     self.minY = ko.computed(function () {
-        return (-self.unitConverter.fromInch(operationsViewModel.maxY() / jscut.priv.path.inchToClipperScale) + Number(self.offsetY())).toFixed(4);
+        return (            
+            (-(self.unitConverter.fromInch(operationsViewModel.maxY() / jscut.priv.path.inchToClipperScale) * (svgViewModel.scaleFactor() / 100)) 
+            + Number(self.offsetY())).toFixed(4)
+        )
     });
     self.maxY = ko.computed(function () {
-        return (-self.unitConverter.fromInch(operationsViewModel.minY() / jscut.priv.path.inchToClipperScale) + Number(self.offsetY())).toFixed(4);
+        return (
+            (self.unitConverter.fromInch(operationsViewModel.minY() 
+            / jscut.priv.path.inchToClipperScale) * (svgViewModel.scaleFactor()/100) 
+            + Number(self.offsetY())).toFixed(4));
     });
 
     self.zeroLowerLeft = function () {
         allowGen = false;
-        self.offsetX(-self.unitConverter.fromInch(operationsViewModel.minX() / jscut.priv.path.inchToClipperScale));
-        self.offsetY(-self.unitConverter.fromInch(-operationsViewModel.maxY() / jscut.priv.path.inchToClipperScale));
+        self.offsetX(-self.unitConverter.fromInch(operationsViewModel.minX() / jscut.priv.path.inchToClipperScale) * (svgViewModel.scaleFactor() / 100));
+        self.offsetY(-self.unitConverter.fromInch(-operationsViewModel.maxY() / jscut.priv.path.inchToClipperScale) * (svgViewModel.scaleFactor() / 100));
         allowGen = true;
         self.generateGcode();
     }
 
     self.zeroCenter = function () {
         allowGen = false;
-        self.offsetX(-self.unitConverter.fromInch((operationsViewModel.minX() + operationsViewModel.maxX()) / 2 / jscut.priv.path.inchToClipperScale));
-        self.offsetY(-self.unitConverter.fromInch(-(operationsViewModel.minY() + operationsViewModel.maxY()) / 2 / jscut.priv.path.inchToClipperScale));
+        self.offsetX(-self.unitConverter.fromInch((operationsViewModel.minX() + operationsViewModel.maxX()) * (svgViewModel.scaleFactor() / 100) / 2 / jscut.priv.path.inchToClipperScale));
+        self.offsetY(-self.unitConverter.fromInch(-(operationsViewModel.minY() + operationsViewModel.maxY()) * (svgViewModel.scaleFactor() / 100) / 2 / jscut.priv.path.inchToClipperScale));
         allowGen = true;
         self.generateGcode();
     }
