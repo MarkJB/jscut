@@ -1,5 +1,0 @@
-make.exe --dry-run --always-make --keep-going --print-directory
-make: Entering directory 'd:/OneDrive/Code/jscut'
-cd cpp && em++ cam.cpp hspocket.cpp separateTabs.cpp vEngrave.cpp -I D:/OneDrive/Code/boost_1_79_0/boost_1_79_0 -std=c++11 --memory-init-file 0 -fcolor-diagnostics -Wall -Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-logical-op-parentheses -s ASSERTIONS=0 -s ALLOW_MEMORY_GROWTH=1 -s SAFE_HEAP=0 -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS="['_hspocket', '_separateTabs', '_vPocket']" -o ../js/cam-cpp.js  -O3 --llvm-lto 1 
-make: Leaving directory 'd:/OneDrive/Code/jscut'
- 
