@@ -275,9 +275,30 @@ function openSvgDropbox() {
 }
 
 $("#MainSvg").click(function (e) {
+    // Ignore double click
+    if (e.originalEvent.detail > 1)
+        return;
+
     var element = Snap.getElementByPoint(e.pageX, e.pageY);
     if (element != null) {
         operationsViewModel.clickOnSvg(element) || tabsViewModel.clickOnSvg(element) || selectionViewModel.clickOnSvg(element);
+        if (selectionViewModel.selNumSelected() > 0) {
+            tutorial(3, 'Click "Create Operation" after you have finished selecting objects.');
+        }
+    }
+});
+
+$("#MainSvg").dblclick(function (e) {
+    // If there are selections clear them
+    if (selectionViewModel.selNumSelected() > 1) {
+        selectionViewModel.clearSelection();
+        return;
+    }
+    // Otherwise if there is one or more paths, select all paths
+    if ( mainSvg.selectAll('path').length) {
+        mainSvg.selectAll('path').forEach(function (element) {
+            operationsViewModel.clickOnSvg(element) || tabsViewModel.clickOnSvg(element) || selectionViewModel.clickOnSvg(element);
+        });
         if (selectionViewModel.selNumSelected() > 0) {
             tutorial(3, 'Click "Create Operation" after you have finished selecting objects.');
         }
